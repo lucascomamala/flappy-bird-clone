@@ -26,9 +26,10 @@ const initialBirdPos = { x: config.width * 0.1, y: config.height * 0.5 }
 
 const PIPES = 4;
 
-let bird, lowerPipe, upperPipe = null;
+let bird = null;
+let pipes = null;
+let pipePosX = 0;
 let pipeGapRange = [120, 250];
-let pipeXPos = 0;
 
 function preload() {
   this.load.image('sky', 'assets/sky.png');
@@ -41,11 +42,15 @@ function create() {
   bird = this.physics.add.sprite(initialBirdPos.x, initialBirdPos.y, 'bird').setOrigin(0, 0);
   bird.body.gravity.y = 400;
 
+  pipes = this.physics.add.group();
+
   for (let i = 1; i <= PIPES; i += 1) {
-    const upperPipe = this.physics.add.sprite(0, 0, 'pipe').setOrigin(0, 1);
-    const lowerPipe = this.physics.add.sprite(0, 0, 'pipe').setOrigin(0, 0);
+    const upperPipe = pipes.create(0, 0, 'pipe').setOrigin(0, 1);
+    const lowerPipe = pipes.create(0, 0, 'pipe').setOrigin(0, 0);
     placePipe(upperPipe, lowerPipe);
   }
+
+  pipes.setVelocityX(-200);
 
   this.input.on('pointerdown', flap);
   this.input.keyboard.on('keydown_SPACE', flap);
@@ -59,18 +64,20 @@ function update(time, delta) {
 }
 
 function placePipe(uPipe, lPipe) {
-  pipeXPos += 300;
+  pipePosX += 300;
+  // pipePosX = getRIghtMostPipe();
   let pipeGap = Phaser.Math.Between(...pipeGapRange);
   let pipeTop = Phaser.Math.Between(0 + 20, config.height - 20 - pipeGap);
 
-  uPipe.x = pipeXPos;
+  uPipe.x = pipePosX;
   uPipe.y = pipeTop;
 
-  lPipe.x = pipeXPos;
+  lPipe.x = pipePosX;
   lPipe.y = uPipe.y + pipeGap;
+}
 
-  uPipe.body.velocity.x = -200;
-  lPipe.body.velocity.x = -200;
+function getRighmostPipe() {
+
 }
 
 function restartBirdPosition() {
