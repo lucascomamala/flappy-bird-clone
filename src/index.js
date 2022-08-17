@@ -24,10 +24,11 @@ const VELOCITY = 200;
 const flapVelocity = 300;
 const initialBirdPos = { x: config.width * 0.1, y: config.height * 0.5 }
 
+const PIPES = 4;
+
 let bird, lowerPipe, upperPipe = null;
 let pipeGapRange = [120, 250];
-let pipeGap = Phaser.Math.Between(...pipeGapRange);
-let pipeTop = Phaser.Math.Between(0 + 20, config.height - 20 - pipeGap);
+let pipeGap, pipeTop, pipeSpacing = 300;
 
 function preload() {
   this.load.image('sky', 'assets/sky.png');
@@ -39,8 +40,16 @@ function create() {
   this.add.image(0, 0, 'sky').setOrigin(0, 0);
   bird = this.physics.add.sprite(initialBirdPos.x, initialBirdPos.y, 'bird').setOrigin(0,0);
   bird.body.gravity.y = 400;
-  upperPipe = this.physics.add.sprite(400, pipeTop, 'pipe').setOrigin(0, 1);
-  lowerPipe = this.physics.add.sprite(400, upperPipe.y + pipeGap, 'pipe').setOrigin(0, 0);
+
+  for ( let i = 1; i <= PIPES; i += 1 ) {
+    pipeGap = Phaser.Math.Between(...pipeGapRange);
+    pipeTop = Phaser.Math.Between(0 + 20, config.height - 20 - pipeGap);
+    upperPipe = this.physics.add.sprite(pipeSpacing * i, pipeTop, 'pipe').setOrigin(0, 1);
+    lowerPipe = this.physics.add.sprite(pipeSpacing * i, upperPipe.y + pipeGap, 'pipe').setOrigin(0, 0);
+
+    upperPipe.body.velocity.x = -200;
+    lowerPipe.body.velocity.x = -200;
+  }
 
   this.input.on('pointerdown', flap);
   this.input.keyboard.on('keydown_SPACE', flap);
