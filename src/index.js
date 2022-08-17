@@ -25,11 +25,13 @@ const flapVelocity = 300;
 const initialBirdPos = { x: config.width * 0.1, y: config.height * 0.5 }
 
 const PIPES = 4;
+const pipeGapRange = [120, 250];
+const pipeSpacingRange = [400, 550];
+
+let pipePosX = 0;
 
 let bird = null;
 let pipes = null;
-let pipePosX = 0;
-let pipeGapRange = [120, 250];
 
 function preload() {
   this.load.image('sky', 'assets/sky.png');
@@ -64,20 +66,26 @@ function update(time, delta) {
 }
 
 function placePipe(uPipe, lPipe) {
-  pipePosX += 300;
-  // pipePosX = getRIghtMostPipe();
-  let pipeGap = Phaser.Math.Between(...pipeGapRange);
-  let pipeTop = Phaser.Math.Between(0 + 20, config.height - 20 - pipeGap);
+  const rightMostX = getRightMostPipe();
+  const pipeGap = Phaser.Math.Between(...pipeGapRange);
+  const pipeTop = Phaser.Math.Between(0 + 20, config.height - 20 - pipeGap);
+  const pipeDistance = Phaser.Math.Between(...pipeSpacingRange);
 
-  uPipe.x = pipePosX;
+  uPipe.x = rightMostX + pipeDistance;
   uPipe.y = pipeTop;
 
-  lPipe.x = pipePosX;
+  lPipe.x = uPipe.x;
   lPipe.y = uPipe.y + pipeGap;
 }
 
-function getRighmostPipe() {
-
+function getRightMostPipe() {
+  let rightMost = 0;
+  debugger
+  pipes.getChildren().forEach((pipe) => {
+    debugger
+    rightMost = Math.max(pipe.x, rightMost);
+  });
+  return rightMost;
 }
 
 function restartBirdPosition() {
