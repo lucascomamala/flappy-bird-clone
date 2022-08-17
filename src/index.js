@@ -18,7 +18,15 @@ const config = {
     create,
     update,
   },
-}
+};
+
+const VELOCITY = 200;
+const flapVelocity = 300;
+const initialBirdPos = { x: config.width * 0.1, y: config.height * 0.5 }
+
+let bird, lowerPipe, upperPipe = null;
+let pipeGapRange = [150, 250];
+let pipeGap = Phaser.Math.Between(...pipeGapRange)
 
 function preload() {
   this.load.image('sky', 'assets/sky.png');
@@ -26,18 +34,12 @@ function preload() {
   this.load.image('pipe', 'assets/pipe.png');
 }
 
-const VELOCITY = 200;
-const flapVelocity = 300;
-const initialBirdPos = {x: config.width * 0.1, y: config.height * 0.5}
-
-let bird, lowerPipe, upperPipe = null;
-
 function create() {
   this.add.image(0, 0, 'sky').setOrigin(0, 0);
   bird = this.physics.add.sprite(initialBirdPos.x, initialBirdPos.y, 'bird').setOrigin(0,0);
   bird.body.gravity.y = 400;
   upperPipe = this.physics.add.sprite(400, 100, 'pipe').setOrigin(0, 1);
-  lowerPipe = this.physics.add.sprite(400, upperPipe.y + 100, 'pipe').setOrigin(0, 0);
+  lowerPipe = this.physics.add.sprite(400, upperPipe.y + pipeGap, 'pipe').setOrigin(0, 0);
 
   this.input.on('pointerdown', flap);
   this.input.keyboard.on('keydown_SPACE', flap);
@@ -59,14 +61,6 @@ function restartBirdPosition() {
 
 function flap() {
   bird.body.velocity.y = -flapVelocity;
-}
-
-function randomExclude(min, max) {
-  return Math.floor(Math.random() * (max - min) ) + min;
-}
-
-function randomInclude(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
 
 new Phaser.Game(config);
