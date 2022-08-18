@@ -17,7 +17,9 @@ class PlayScene extends Phaser.Scene {
     this.flapVelocity = 300;
 
     this.score = 0;
-    this.scoreText = "";
+    this.scoreText = '';
+    this.bestScore = 0;
+    this.bestScoreText = '';
   }
 
   preload() {
@@ -76,8 +78,13 @@ class PlayScene extends Phaser.Scene {
 
   createScore() {
     this.score = 0;
+    this.bestScore = localStorage.getItem('bestScore');
     this.scoreText = this.add.text(16, 16, `Score: ${0}`, {
       fontSize: "32px",
+      fill: "#000",
+    });
+    this.bestScoreText = this.add.text(16, 52, `Best: ${this.bestScore || 0}`, {
+      fontSize: "18px",
       fill: "#000",
     });
   }
@@ -120,6 +127,7 @@ class PlayScene extends Phaser.Scene {
         if (tempPipes.length === 2) {
           this.placePipe(...tempPipes);
           this.increaseScore();
+          this.saveBestScore();
         }
       }
     });
@@ -133,9 +141,17 @@ class PlayScene extends Phaser.Scene {
     return rightMost;
   }
 
+  saveBestScore() {
+    if (!this.bestScore || this.score >= this.bestScore) {
+      localStorage.setItem("bestScore", this.score);
+    }
+  }
+
   gameOver() {
     this.physics.pause();
     this.bird.setTint(0xee4824);
+
+    this.saveBestScore();
 
     this.time.addEvent({
       delay: 1000,
@@ -153,6 +169,10 @@ class PlayScene extends Phaser.Scene {
   increaseScore() {
     this.score += 1;
     this.scoreText.setText(`Score: ${this.score}`);
+    if (this.score > this.bestScore) {
+      this.bestScore = this.score;
+      this.bestScoreText.setText(`Best: ${this.bestScore}`);
+    }
   }
 }
 
