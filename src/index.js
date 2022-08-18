@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import PlayScene from "./scenes/PlayScene";
 
 const config = {
   // WebGL
@@ -12,11 +13,7 @@ const config = {
       debug: true,
     },
   },
-  scene: {
-    preload,
-    create,
-    update,
-  },
+  scene: [PlayScene],
 };
 
 const VELOCITY = 200;
@@ -85,7 +82,7 @@ function recyclePipe() {
   pipes.getChildren().forEach((pipe) => {
     if (pipe.getBounds().right <= 0) {
       tempPipes.push(pipe);
-      if(tempPipes.length === 2) {
+      if (tempPipes.length === 2) {
         placePipe(...tempPipes);
       }
     }
