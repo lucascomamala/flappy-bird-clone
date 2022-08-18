@@ -51,8 +51,14 @@ class PlayScene extends Phaser.Scene {
     this.pipes = this.physics.add.group();
 
     for (let i = 1; i <= PIPES; i += 1) {
-      const upperPipe = this.pipes.create(0, 0, "pipe").setOrigin(0, 1);
-      const lowerPipe = this.pipes.create(0, 0, "pipe").setOrigin(0, 0);
+      const upperPipe = this.pipes
+        .create(0, 0, "pipe")
+        .setImmovable(true)
+        .setOrigin(0, 1);
+      const lowerPipe = this.pipes
+        .create(0, 0, "pipe")
+        .setImmovable(true)
+        .setOrigin(0, 0);
       this.placePipe(upperPipe, lowerPipe);
     }
 
@@ -111,9 +117,11 @@ class PlayScene extends Phaser.Scene {
   }
 
   gameOver() {
-    this.bird.x = this.config.startPosition.x;
-    this.bird.y = this.config.startPosition.y;
-    this.bird.body.velocity.y = 0;
+    // this.bird.x = this.config.startPosition.x;
+    // this.bird.y = this.config.startPosition.y;
+    // this.bird.body.velocity.y = 0;
+    this.physics.pause();
+    this.bird.setTint(0xEE4824);
   }
 
   flap() {
