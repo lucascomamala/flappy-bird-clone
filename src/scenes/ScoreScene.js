@@ -2,7 +2,7 @@ import BaseScene from './BaseScene';
 
 class ScoreScene extends BaseScene {
   constructor(config) {
-    super('ScoreScene', config);
+    super('ScoreScene', {...config, canGoBack: true});
 
   }
 
