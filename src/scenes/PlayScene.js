@@ -17,15 +17,16 @@ class PlayScene extends Phaser.Scene {
     this.flapVelocity = 300;
 
     this.score = 0;
-    this.scoreText = '';
+    this.scoreText = "";
     this.bestScore = 0;
-    this.bestScoreText = '';
+    this.bestScoreText = "";
   }
 
   preload() {
     this.load.image("sky", "assets/sky.png");
     this.load.image("bird", "assets/bird.png");
     this.load.image("pipe", "assets/pipe.png");
+    this.load.image("pause", "assets/pause.png");
   }
 
   create() {
@@ -34,6 +35,7 @@ class PlayScene extends Phaser.Scene {
     this.createPipes();
     this.createColliders();
     this.createScore();
+    this.createPause();
     this.handleInputs();
   }
 
@@ -78,7 +80,7 @@ class PlayScene extends Phaser.Scene {
 
   createScore() {
     this.score = 0;
-    this.bestScore = localStorage.getItem('bestScore');
+    this.bestScore = localStorage.getItem("bestScore");
     this.scoreText = this.add.text(16, 16, `Score: ${0}`, {
       fontSize: "32px",
       fill: "#000",
@@ -87,6 +89,10 @@ class PlayScene extends Phaser.Scene {
       fontSize: "18px",
       fill: "#000",
     });
+  }
+
+  createPause() {
+    this.add.image(this.config.width - 10, this.config.height - 10, "pause").setScale(3).setOrigin(1, 1);
   }
 
   handleInputs() {
