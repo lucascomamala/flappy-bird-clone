@@ -24,16 +24,16 @@ class PlayScene extends BaseScene {
     this.currentDificulty = 'easy';
     this.difficulties = {
       'easy': {
-        pipeHorizontalDistanceRange: [300, 350],
-        pipeVerticalDistanceRange: [150, 200]
+        pipeSpacingRange: [300, 350],
+        pipeGapRange: [150, 200]
       },
       'normal': {
-        pipeHorizontalDistanceRange: [280, 330],
-        pipeVerticalDistanceRange: [140, 190]
+        pipeSpacingRange: [280, 330],
+        pipeGapRange: [140, 190]
       },
       'hard': {
-        pipeHorizontalDistanceRange: [250, 310],
-        pipeVerticalDistanceRange: [120, 150]
+        pipeSpacingRange: [250, 310],
+        pipeGapRange: [120, 150]
       }
     };
   }
@@ -87,7 +87,9 @@ class PlayScene extends BaseScene {
   createBird() {
     this.bird = this.physics.add
       .sprite(this.config.startPosition.x, this.config.startPosition.y, 'bird')
-      .setOrigin(0, 0);
+      .setOrigin(0, 0)
+      .setScale(3)
+      .setFlipX(true);
     this.bird.body.gravity.y = 550;
     this.bird.setCollideWorldBounds(true);
   }
@@ -183,9 +185,18 @@ class PlayScene extends BaseScene {
           this.placePipe(...tempPipes);
           this.increaseScore();
           this.saveBestScore();
+          this.increaseDifficulty();
         }
       }
     });
+  }
+
+  increaseDifficulty() {
+    if (this.score === 1) {
+      this.currentDificulty = 'normal';
+    } else if (this.score === 3) {
+      this.currentDificulty = 'hard';
+    }
   }
 
   getRightMostPipe() {
