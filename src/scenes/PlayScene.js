@@ -20,9 +20,26 @@ class PlayScene extends BaseScene {
     this.scoreText = '';
     this.bestScore = 0;
     this.bestScoreText = '';
+
+    this.currentDificulty = 'easy';
+    this.difficulties = {
+      'easy': {
+        pipeHorizontalDistanceRange: [300, 350],
+        pipeVerticalDistanceRange: [150, 200]
+      },
+      'normal': {
+        pipeHorizontalDistanceRange: [280, 330],
+        pipeVerticalDistanceRange: [140, 190]
+      },
+      'hard': {
+        pipeHorizontalDistanceRange: [250, 310],
+        pipeVerticalDistanceRange: [120, 150]
+      }
+    };
   }
 
   create() {
+    this.currentDificulty = 'easy';
     super.create();
     this.createBird();
     this.createPipes();
@@ -141,13 +158,14 @@ class PlayScene extends BaseScene {
   }
 
   placePipe(uPipe, lPipe) {
+    const difficulty = this.difficulties[this.currentDificulty];
     const rightMostX = this.getRightMostPipe();
-    const pipeGap = Phaser.Math.Between(...this.pipeGapRange);
+    const pipeGap = Phaser.Math.Between(...difficulty.pipeGapRange);
     const pipeTop = Phaser.Math.Between(
       0 + 20,
       this.config.height - 20 - pipeGap
     );
-    const pipeDistance = Phaser.Math.Between(...this.pipeSpacingRange);
+    const pipeDistance = Phaser.Math.Between(...difficulty.pipeSpacingRange);
 
     uPipe.x = rightMostX + pipeDistance;
     uPipe.y = pipeTop;
